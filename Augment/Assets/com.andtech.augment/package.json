@@ -1,0 +1,10 @@
+{
+	"name": "com.andtech.augment",
+	"displayName": "Editor extensions",
+	"description": "Various extensions to the Editor",
+	"author": {
+		"name": "Andtech Studios",
+		"email": "andtechstudios@gmail.com",
+		"url": "https://andtechstudios.com"
+	}
+}
