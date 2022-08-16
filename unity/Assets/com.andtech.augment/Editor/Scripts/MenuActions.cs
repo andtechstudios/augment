@@ -111,6 +111,12 @@ namespace Andtech.Augment
 			method.Invoke(new object(), null);
 		}
 
+		[MenuItem("File/Force Save %#&S", false, 180)]
+		public static void ForceSave()
+		{
+			AssetDatabase.SaveAssets();
+		}
+
 		private static void EditorApplication_playModeStateChanged(PlayModeStateChange obj)
 		{
 			if (obj == PlayModeStateChange.EnteredEditMode)
