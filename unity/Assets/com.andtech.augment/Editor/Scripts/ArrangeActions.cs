@@ -44,7 +44,7 @@ namespace Andtech.Augment
 				{
 					var gameObject = list[i];
 					var initialIndex = gameObject.transform.GetSiblingIndex();
-					
+
 					if (initialIndex + 1 == blocker)
 					{
 						blocker = initialIndex;
