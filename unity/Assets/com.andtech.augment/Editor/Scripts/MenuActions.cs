@@ -11,7 +11,7 @@ using UnityEngine;
 namespace Andtech.Augment
 {
 
-	public class MenuActions : ScriptableObject
+	public static class MenuActions
 	{
 		private static EditorWindow GameWindow => EditorWindow.GetWindow(typeof(EditorWindow).Assembly.GetType("UnityEditor.GameView"));
 		private static bool autoMaximize;
@@ -102,19 +102,20 @@ namespace Andtech.Augment
 			}
 		}
 
-		[MenuItem("Edit/Andtech/Clear Console %#L")]
-		public static void ClearConsole()
-		{
-			Assembly assembly = Assembly.GetAssembly(typeof(SceneView));
-			Type type = assembly.GetType("UnityEditor.LogEntries");
-			MethodInfo method = type.GetMethod("Clear");
-			method.Invoke(new object(), null);
-		}
-
 		[MenuItem("File/Force Save %#&S", false, 180)]
 		public static void ForceSave()
 		{
 			AssetDatabase.SaveAssets();
+		}
+
+		[MenuItem("Shortcuts/Close Window Tab &W")]
+		static void CloseTab()
+		{
+			EditorWindow focusedWindow = EditorWindow.focusedWindow;
+			if (focusedWindow != null)
+			{
+				focusedWindow.Close();
+			}
 		}
 
 		private static void EditorApplication_playModeStateChanged(PlayModeStateChange obj)
