@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Andtech.Augment
 {
 
-	public static class ArrangeActions
+	public static class ArrangeMenuActions
 	{
 
 		[MenuItem("Edit/Andtech/Order/Move Back One %[")]
@@ -44,7 +44,7 @@ namespace Andtech.Augment
 				{
 					var gameObject = list[i];
 					var initialIndex = gameObject.transform.GetSiblingIndex();
-					
+
 					if (initialIndex + 1 == blocker)
 					{
 						blocker = initialIndex;

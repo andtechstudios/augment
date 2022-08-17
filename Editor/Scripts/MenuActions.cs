@@ -2,16 +2,14 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using UnityEditor;
-using UnityEditor.ShortcutManagement;
 using UnityEngine;
 
 namespace Andtech.Augment
 {
 
-	public class MenuActions : ScriptableObject
+	public static class MenuActions
 	{
 		private static EditorWindow GameWindow => EditorWindow.GetWindow(typeof(EditorWindow).Assembly.GetType("UnityEditor.GameView"));
 		private static bool autoMaximize;
@@ -20,6 +18,42 @@ namespace Andtech.Augment
 		static MenuActions()
 		{
 			EditorApplication.playModeStateChanged += EditorApplication_playModeStateChanged;
+		}
+
+		[MenuItem("File/Force Save %#&S", false, 180)]
+		public static void ForceSave()
+		{
+			AssetDatabase.SaveAssets();
+		}
+
+		[MenuItem("File/Run Build...", priority = 215)]
+		public static void Launch()
+		{
+			var buildDir = Path.Combine(Environment.CurrentDirectory, "builds");
+			string extension;
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				extension = ".exe";
+			}
+			else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+			{
+				extension = ".app";
+			}
+			else
+			{
+				throw new InvalidOperationException("The current platform is not supported.");
+			}
+
+			var binaries = Directory.EnumerateFiles(buildDir, $"*{extension}", SearchOption.TopDirectoryOnly);
+			if (binaries.Any())
+			{
+				var binary = binaries.First();
+				Process.Start(binary);
+			}
+			else
+			{
+				UnityEngine.Debug.LogError($"No binaries found in {buildDir}");
+			}
 		}
 
 		[MenuItem("Edit/Andtech/Run _F4")]
@@ -65,56 +99,14 @@ namespace Andtech.Augment
 			GameWindow.maximized = false;
 		}
 
-		[MenuItem("File/Show Project in Explorer %#E", priority = 199)]
-		public static void ShowInExplorer()
+		[MenuItem("Edit/Andtech/Close Window\\Tab &W")]
+		static void CloseTab()
 		{
-			string path = Directory.GetParent(Application.dataPath).FullName;
-			EditorUtility.RevealInFinder(path);
-		}
-
-		[MenuItem("Edit/Launch...", priority = 185)]
-		public static void Launch()
-		{
-			var buildDir = Path.Combine(Environment.CurrentDirectory, "builds");
-			string extension;
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			EditorWindow focusedWindow = EditorWindow.focusedWindow;
+			if (focusedWindow != null)
 			{
-				extension = ".exe";
+				focusedWindow.Close();
 			}
-			else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-			{
-				extension = ".app";
-			}
-			else
-			{
-				throw new InvalidOperationException("The current platform is not supported.");
-			}
-
-			var binaries = Directory.EnumerateFiles(buildDir, $"*{extension}", SearchOption.TopDirectoryOnly);
-			if (binaries.Any())
-			{
-				var binary = binaries.First();
-				Process.Start(binary);
-			}
-			else
-			{
-				UnityEngine.Debug.LogError($"No binaries found in {buildDir}");
-			}
-		}
-
-		[MenuItem("Edit/Andtech/Clear Console %#L")]
-		public static void ClearConsole()
-		{
-			Assembly assembly = Assembly.GetAssembly(typeof(SceneView));
-			Type type = assembly.GetType("UnityEditor.LogEntries");
-			MethodInfo method = type.GetMethod("Clear");
-			method.Invoke(new object(), null);
-		}
-
-		[MenuItem("File/Force Save %#&S", false, 180)]
-		public static void ForceSave()
-		{
-			AssetDatabase.SaveAssets();
 		}
 
 		private static void EditorApplication_playModeStateChanged(PlayModeStateChange obj)
