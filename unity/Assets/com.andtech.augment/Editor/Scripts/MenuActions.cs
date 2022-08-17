@@ -20,6 +20,42 @@ namespace Andtech.Augment
 			EditorApplication.playModeStateChanged += EditorApplication_playModeStateChanged;
 		}
 
+		[MenuItem("File/Force Save %#&S", false, 180)]
+		public static void ForceSave()
+		{
+			AssetDatabase.SaveAssets();
+		}
+
+		[MenuItem("File/Run Build...", priority = 215)]
+		public static void Launch()
+		{
+			var buildDir = Path.Combine(Environment.CurrentDirectory, "builds");
+			string extension;
+			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+			{
+				extension = ".exe";
+			}
+			else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+			{
+				extension = ".app";
+			}
+			else
+			{
+				throw new InvalidOperationException("The current platform is not supported.");
+			}
+
+			var binaries = Directory.EnumerateFiles(buildDir, $"*{extension}", SearchOption.TopDirectoryOnly);
+			if (binaries.Any())
+			{
+				var binary = binaries.First();
+				Process.Start(binary);
+			}
+			else
+			{
+				UnityEngine.Debug.LogError($"No binaries found in {buildDir}");
+			}
+		}
+
 		[MenuItem("Edit/Andtech/Run _F4")]
 		public static void Play()
 		{
@@ -63,50 +99,7 @@ namespace Andtech.Augment
 			GameWindow.maximized = false;
 		}
 
-		[MenuItem("File/Show Project in Explorer %#E", priority = 199)]
-		public static void ShowInExplorer()
-		{
-			string path = Directory.GetParent(Application.dataPath).FullName;
-			EditorUtility.RevealInFinder(path);
-		}
-
-		[MenuItem("Edit/Launch...", priority = 185)]
-		public static void Launch()
-		{
-			var buildDir = Path.Combine(Environment.CurrentDirectory, "builds");
-			string extension;
-			if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-			{
-				extension = ".exe";
-			}
-			else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-			{
-				extension = ".app";
-			}
-			else
-			{
-				throw new InvalidOperationException("The current platform is not supported.");
-			}
-
-			var binaries = Directory.EnumerateFiles(buildDir, $"*{extension}", SearchOption.TopDirectoryOnly);
-			if (binaries.Any())
-			{
-				var binary = binaries.First();
-				Process.Start(binary);
-			}
-			else
-			{
-				UnityEngine.Debug.LogError($"No binaries found in {buildDir}");
-			}
-		}
-
-		[MenuItem("File/Force Save %#&S", false, 180)]
-		public static void ForceSave()
-		{
-			AssetDatabase.SaveAssets();
-		}
-
-		[MenuItem("Shortcuts/Close Window Tab &W")]
+		[MenuItem("Edit/Andtech/Close Window\\Tab &W")]
 		static void CloseTab()
 		{
 			EditorWindow focusedWindow = EditorWindow.focusedWindow;

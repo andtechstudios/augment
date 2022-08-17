@@ -5,7 +5,7 @@ using UnityEngine;
 namespace Andtech.Augment
 {
 
-	public static class ArrangeActions
+	public static class ArrangeMenuActions
 	{
 
 		[MenuItem("Edit/Andtech/Order/Move Back One %[")]
