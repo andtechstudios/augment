@@ -20,10 +20,63 @@ namespace Andtech.Augment
 			EditorApplication.playModeStateChanged += EditorApplication_playModeStateChanged;
 		}
 
-		[MenuItem("File/Force Save %#&S", false, 180)]
+		[MenuItem("Edit/Andtech/Close Tab\\Window %#W")]
+		static void CloseTab()
+		{
+			EditorWindow focusedWindow = EditorWindow.focusedWindow;
+			if (focusedWindow)
+			{
+				focusedWindow.Close();
+			}
+		}
+
+		[MenuItem("Edit/Andtech/Run _F4")]
+		public static void Play()
+		{
+			EditorApplication.ExecuteMenuItem("Edit/Play");
+		}
+
+		[MenuItem("Edit/Andtech/Pause _F5")]
+		public static void Pause()
+		{
+			EditorApplication.ExecuteMenuItem("Edit/Pause");
+		}
+
+		[MenuItem("Edit/Andtech/Step _F6")]
+		public static void Step()
+		{
+			EditorApplication.ExecuteMenuItem("Edit/Step");
+		}
+
+		[MenuItem("Edit/Andtech/Run Maximized _#F5")]
+		public static void PlayMaximized()
+		{
+			if (!EditorApplication.isPlaying)
+			{
+				autoMaximize = true;
+				wasMaximized = GameWindow.maximized;
+
+				GameWindow.maximized = true;
+			}
+			EditorApplication.ExecuteMenuItem("Edit/Play");
+		}
+
+		[MenuItem("File/Force Save %#S", false, 180)]
 		public static void ForceSave()
 		{
 			AssetDatabase.SaveAssets();
+		}
+
+		[MenuItem("Edit/Andtech/Maximize (Force) %#UP")]
+		public static void MaximizeForce()
+		{
+			GameWindow.maximized = true;
+		}
+
+		[MenuItem("Edit/Andtech/Unmaximize (Force) %#DOWN")]
+		public static void UnmaximizeForce()
+		{
+			GameWindow.maximized = false;
 		}
 
 		[MenuItem("File/Run Build...", priority = 215)]
@@ -53,59 +106,6 @@ namespace Andtech.Augment
 			else
 			{
 				UnityEngine.Debug.LogError($"No binaries found in {buildDir}");
-			}
-		}
-
-		[MenuItem("Edit/Andtech/Run _F4")]
-		public static void Play()
-		{
-			EditorApplication.ExecuteMenuItem("Edit/Play");
-		}
-
-		[MenuItem("Edit/Andtech/Pause _F5")]
-		public static void Pause()
-		{
-			EditorApplication.ExecuteMenuItem("Edit/Pause");
-		}
-
-		[MenuItem("Edit/Andtech/Step _F6")]
-		public static void Step()
-		{
-			EditorApplication.ExecuteMenuItem("Edit/Step");
-		}
-
-		[MenuItem("Edit/Andtech/Run Maximized #_F5")]
-		public static void PlayMaximized()
-		{
-			if (!EditorApplication.isPlaying)
-			{
-				autoMaximize = true;
-				wasMaximized = GameWindow.maximized;
-
-				GameWindow.maximized = true;
-			}
-			EditorApplication.ExecuteMenuItem("Edit/Play");
-		}
-
-		[MenuItem("Edit/Andtech/Maximize (Force) %#UP")]
-		public static void MaximizeForce()
-		{
-			GameWindow.maximized = true;
-		}
-
-		[MenuItem("Edit/Andtech/Unmaximize (Force) %#DOWN")]
-		public static void UnmaximizeForce()
-		{
-			GameWindow.maximized = false;
-		}
-
-		[MenuItem("Edit/Andtech/Close Window\\Tab &W")]
-		static void CloseTab()
-		{
-			EditorWindow focusedWindow = EditorWindow.focusedWindow;
-			if (focusedWindow != null)
-			{
-				focusedWindow.Close();
 			}
 		}
 
