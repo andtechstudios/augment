@@ -17,12 +17,5 @@ namespace Andtech.Augment
 			MethodInfo method = type.GetMethod("Clear");
 			method.Invoke(new object(), null);
 		}
-
-		[MenuItem("Edit/Andtech/Summon Console ^`")]
-		public static void ToggleConsole()
-		{
-			var window = EditorWindow.GetWindow(consoleWindowType, false, "Console");
-			window.Show();
-		}
 	}
 }
