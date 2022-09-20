@@ -7,7 +7,6 @@ namespace Andtech.Augment
 
 	public static class ConsoleMenuActions
 	{
-		private static bool hasConsole;
 		private static readonly Type consoleWindowType = typeof(Editor).Assembly.GetType("UnityEditor.ConsoleWindow");
 
 		[MenuItem("Edit/Andtech/Clear Console %#L")]
@@ -19,23 +18,11 @@ namespace Andtech.Augment
 			method.Invoke(new object(), null);
 		}
 
-		[MenuItem("Edit/Andtech/Toggle Console ^`")]
+		[MenuItem("Edit/Andtech/Summon Console ^`")]
 		public static void ToggleConsole()
 		{
-			if (hasConsole)
-			{
-				var window = EditorWindow.GetWindow(consoleWindowType, false, "Console");
-				window.Close();
-
-				hasConsole = false;
-			}
-			else
-			{
-				var window = EditorWindow.GetWindow(consoleWindowType, false, "Console");
-				window.Show();
-
-				hasConsole = true;
-			}
+			var window = EditorWindow.GetWindow(consoleWindowType, false, "Console");
+			window.Show();
 		}
 	}
 }
