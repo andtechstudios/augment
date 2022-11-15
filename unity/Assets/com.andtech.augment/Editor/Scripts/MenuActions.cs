@@ -67,6 +67,12 @@ namespace Andtech.Augment
 			AssetDatabase.SaveAssets();
 		}
 
+		[MenuItem("File/Force Reload Scripts %#R", false, 181)]
+		public static void ForceReload()
+		{
+			EditorUtility.RequestScriptReload();
+		}
+
 		[MenuItem("Edit/Andtech/Maximize (Force) %#UP")]
 		public static void MaximizeForce()
 		{
