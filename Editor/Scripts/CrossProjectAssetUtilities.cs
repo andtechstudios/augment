@@ -84,13 +84,30 @@ namespace Andtech.Augment
 		static void DoMerge()
 		{
 			var sourceRoot = AssetDatabase.GUIDToAssetPath(sourceGuid);
-			TransferFolder(sourceRoot);
+			var root = Path.GetDirectoryName(sourceRoot);
+
+			var relativePath = Path.GetRelativePath(root, sourceRoot);
+			var destinationPath = Path.Join(destinationRoot, relativePath);
+			CreateFolder(destinationPath);
+
+			foreach (var directory in Directory.GetDirectories(sourceRoot))
+			{
+				TransferFolder(directory);
+			}
+
+			if (IsEmpty(sourceRoot))
+			{
+				AssetDatabase.DeleteAsset(sourceRoot);
+			}
 
 			AssetDatabase.Refresh();
 
 			void TransferFolder(string path)
 			{
-				var relativePath = Path.GetRelativePath(sourceRoot, path);
+				var relativePath = Path.GetRelativePath(root, path);
+				var destinationPath = Path.Join(destinationRoot, relativePath);
+				CreateFolder(destinationPath);
+
 				foreach (var directory in Directory.EnumerateDirectories(path))
 				{
 					TransferFolder(directory);
@@ -109,16 +126,11 @@ namespace Andtech.Augment
 
 			void TransferFile(string path)
 			{
-				path = path.Replace("\\", "/");
-				destinationRoot = destinationRoot.Replace("\\", "/");
-				var relativePath = Path.GetRelativePath(sourceRoot, path);
+				var relativePath = Path.GetRelativePath(root, path);
 				var destinationPath = Path.Join(destinationRoot, relativePath);
 				var destinationDirectory = Path.GetDirectoryName(destinationPath);
 
-				if (!Directory.Exists(destinationDirectory))
-				{
-					AssetDatabase.CreateFolder(Path.GetDirectoryName(destinationDirectory), Path.GetFileName(destinationDirectory));
-				}
+				Debug.Log($"Merging '{path}' with '{destinationPath}'...");
 				var status = AssetDatabase.MoveAsset(path, destinationPath);
 				if (!string.IsNullOrEmpty(status))
 				{
@@ -140,6 +152,14 @@ namespace Andtech.Augment
 			}
 
 			return true;
+		}
+
+		static void CreateFolder(string path)
+		{
+			if (!Directory.Exists(path))
+			{
+				AssetDatabase.CreateFolder(Path.GetDirectoryName(path), Path.GetFileName(path));
+			}
 		}
 	}
 }
