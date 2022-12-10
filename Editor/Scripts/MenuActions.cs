@@ -20,16 +20,6 @@ namespace Andtech.Augment
 			EditorApplication.playModeStateChanged += EditorApplication_playModeStateChanged;
 		}
 
-		[MenuItem("Edit/Andtech/Close Tab\\Window %#W")]
-		static void CloseTab()
-		{
-			EditorWindow focusedWindow = EditorWindow.focusedWindow;
-			if (focusedWindow)
-			{
-				focusedWindow.Close();
-			}
-		}
-
 		[MenuItem("Edit/Andtech/Run _F4")]
 		public static void Play()
 		{
@@ -46,6 +36,28 @@ namespace Andtech.Augment
 		public static void Step()
 		{
 			EditorApplication.ExecuteMenuItem("Edit/Step");
+		}
+
+		[MenuItem("Edit/Andtech/Undo _M3")]
+		public static void Undo()
+		{
+			UnityEditor.Undo.PerformUndo();
+		}
+
+		[MenuItem("Edit/Andtech/Redo _M4")]
+		public static void Redo()
+		{
+			UnityEditor.Undo.PerformRedo();
+		}
+
+		[MenuItem("Edit/Andtech/Close Tab\\Window %#W")]
+		static void CloseTab()
+		{
+			EditorWindow focusedWindow = EditorWindow.focusedWindow;
+			if (focusedWindow)
+			{
+				focusedWindow.Close();
+			}
 		}
 
 		[MenuItem("Edit/Andtech/Run Maximized _#F5")]
